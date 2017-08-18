@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import RatesTab, { className as ratesTabClassName } from './dumb/RatesTabStyled';
-import Converter from './dumb/converter';
+import Converter from './dumb/Converter';
 import { to2 } from '../utils/format';
 import { css } from '../store/config';
 

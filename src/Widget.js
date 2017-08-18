@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
 import createStore, { history } from './store/createStore';
-import Index from './components/index';
+import Index from './components/Index';
 
 class Widget extends Component {
 	constructor(props) {
