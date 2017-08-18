@@ -12,6 +12,14 @@ git clone https://github.com/luixo/revolut-test-case-frontend.git
 
 Checkout [revolut-test-case-frontend](https://github.com/luixo/revolut-test-case-frontend) and run `yarn install && npm start`, then visit `http://localhost:5000`.
 
+### Production
+
+To run real requests to [openexchangerates.org](openexchangerates.org) create an `.env` file with given content. To switch back to fake requesting delete the `NOVE_ENV` variable or put `development` in it.
+```
+OPENEX_API_KEY=ffffffffffffffffffffffffffffffFf
+NODE_ENV=production
+```
+
 ### Standalone setup
 Run `npm run build` from the project directory, copy `dist` contents to your project and `import Widget from '..somepath/Widget'`. You can use `Widget` as a React component.
 

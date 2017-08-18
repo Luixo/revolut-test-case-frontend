@@ -48,7 +48,7 @@ class Index extends Component {
 	}
 	componentDidMount() {
 		const { refreshCurrencies, refreshRates } = this.props;
-		this.timer = setInterval(refreshRates, 5*1000);
+		this.timer = setInterval(refreshRates, 10*1000);
 		refreshCurrencies();
 		refreshRates();
 	}

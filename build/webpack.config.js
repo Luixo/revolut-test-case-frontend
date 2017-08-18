@@ -49,7 +49,7 @@ const config = {
 		}),
 		new webpack.optimize.CommonsChunkPlugin({ names: ['vendor', 'normalize', 'manifest'] }),
 		new webpack.DefinePlugin({
-			'__DEV__': true,
+			'__DEV__': project.env === 'development',
 			OPENEX_API_KEY: JSON.stringify(process.env.OPENEX_API_KEY || 'Put_your_Open_Exchange_API_key_into_>OPENEX_API_KEY<_variable'),
 		})
 	],
