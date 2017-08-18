@@ -6,3 +6,4 @@ server/
 src/main.js
 src/normalize.js
 src/index.html
+.env

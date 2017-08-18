@@ -1,7 +1,9 @@
 module.exports = {
 	basePath: __dirname,
 	srcDir: 'src',
-	main: 'main',
+	main: 'dev/main',
+	index: 'dev/index.html',
+	normalize: 'dev/normalize',
 	outDir: 'dist',
 	publicPath: '/',
 	sourceMaps: true,

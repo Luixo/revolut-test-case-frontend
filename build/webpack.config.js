@@ -8,7 +8,7 @@ const inProjectSource = file => path.resolve(project.basePath, project.srcDir, f
 
 const config = {
 	entry: {
-		normalize: inProjectSource('normalize'),
+		normalize: inProjectSource(project.normalize),
 		main: [inProjectSource(project.main), `webpack-hot-middleware/client.js?path=${project.publicPath}__webpack_hmr`],
 		vendor: project.vendors
 	},
@@ -32,19 +32,26 @@ const config = {
 			use: [{
 				loader: 'babel-loader',
 			}],
+		}, {
+			test: /\.(png|jpg|gif)$/,
+			loader: 'url-loader',
 		}],
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(),
 		new HtmlWebpackPlugin({
-			template: inProjectSource('index.html'),
+			template: inProjectSource(project.index),
 			inject: true,
 			minify: {
 				collapseWhitespace: true,
 			},
 		}),
-		new webpack.optimize.CommonsChunkPlugin({ names: ['vendor', 'normalize', 'manifest'] })
+		new webpack.optimize.CommonsChunkPlugin({ names: ['vendor', 'normalize', 'manifest'] }),
+		new webpack.DefinePlugin({
+			'__DEV__': true,
+			OPENEX_API_KEY: JSON.stringify(process.env.OPENEX_API_KEY || 'Put_your_Open_Exchange_API_key_into_>OPENEX_API_KEY<_variable'),
+		})
 	],
 };
 
