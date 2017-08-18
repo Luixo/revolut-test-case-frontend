@@ -1,6 +1,6 @@
 {
   "name": "revolut-test-case-frontend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Revolut frontend test case",
   "main": "dist/Widget.js",
   "author": "A.Immoreev",

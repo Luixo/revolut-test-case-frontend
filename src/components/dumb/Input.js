@@ -23,11 +23,7 @@ class Input extends Component {
 			<StyledInput
 				type="text"
 				value={shownValue}
-				onChange={({ target: { value }}) => {
-					console.log(`incoming value`, value);
-					value = formatAmount(value, shownValue.slice(1));
-					onChange(value);
-				}}
+				onChange={({ target: { value }}) => onChange(formatAmount(value, shownValue.slice(1)))}
 				readOnly={!editable}
 				autofocus
 			/>

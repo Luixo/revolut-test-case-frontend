@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import glamorous from 'glamorous';
 
+import { currencies as configCurrencies } from '../../store/config';
 import { formatAmount, to2 } from '../../utils/format';
 
 const Wrapper = glamorous.div({
@@ -41,27 +42,42 @@ class Converter extends Component {
 		super(props);
 		this.state = { value: '1', from: 'USD', to: 'EUR' };
 	}
-	changeCurrency(code, way) {
+	changeCurrency(target, way) {
 		const { from, to } = this.state;
-		if (way === this.constructor.FROM && to !== code)
+		const { options, value: code } = target;
+		if (way === this.constructor.FROM) {
 			this.setState({ from: code });
-		if (way === this.constructor.TO && from !== code)
+			if (to === code) {
+				const currentTo = [...options].findIndex(({ value }) => value === to);
+				const nextTo = options[currentTo === options.length - 1 ? 0 : currentTo + 1].value;
+				this.setState({ to: nextTo });
+			}
+		}
+		if (way === this.constructor.TO) {
 			this.setState({ to: code });
+			if (from === code) {
+				const currentFrom = [...options].findIndex(({ value }) => value === from);
+				const nextFrom = options[currentFrom === options.length - 1 ? 0 : currentFrom + 1].value;
+				this.setState({ from: nextFrom });
+			}
+		}
 	}
 	render() {
 		const { rates, currencies, style } = this.props;
 		const { from, to, value } = this.state;
 
-		let converted = '0';
+		let converted = 'Rate unavailable';
 		if (value) {
 			const rateObject = rates.find(({ code }) => code === from);
 			if (rateObject && rateObject.data[to]) {
-				converted = Number(value) * rateObject.data[to];
+				converted = to2(Number(value) * rateObject.data[to]);
 			} else if (!rateObject) {
-				const usdObject = rates.find(({ code }) => code === 'USD');
-				converted = Number(value) * usdObject.data[to] / usdObject.data[from];
-			} else {
-				converted = '0';
+				const foreignRate = configCurrencies.map(({ code: configCode }) => {
+					const rateObject = rates.find(({ code }) => code === configCode);
+					return rateObject.data[to] && rateObject.data[from] ? rateObject : null;
+				}).find(a => a);
+				if (foreignRate)
+					converted = to2(Number(value) * foreignRate.data[to] / foreignRate.data[from]);
 			}
 		}
 
@@ -71,18 +87,14 @@ class Converter extends Component {
 					nextValue = formatAmount(nextValue, value);
 					this.setState({ value: nextValue });
 				}}/>
-				<Dropdown value={from} onChange={({ target: { value }}) => this.changeCurrency(value, this.constructor.FROM)}>
-					{Object.keys(currencies).map(code => {
-						return <option key={code} value={code}>{code} - {currencies[code]}</option>
-					})}
+				<Dropdown value={from} onChange={({ target }) => this.changeCurrency(target, this.constructor.FROM)}>
+					{Object.keys(currencies).map(code => <option key={code} value={code}>{code} - {currencies[code]}</option>)}
 				</Dropdown>
-				<h1 style={{ margin: 0 }}>⇓</h1>
-				<Dropdown value={to} onChange={({ target: { value }}) => this.changeCurrency(value, this.constructor.TO)}>
-					{Object.keys(currencies).map(code => {
-						return <option key={code} value={code}>{code} - {currencies[code]}</option>
-					})}
+				<h1 style={{ margin: 0 }}>=</h1>
+				<Result>{converted}</Result>
+				<Dropdown value={to} onChange={({ target }) => this.changeCurrency(target, this.constructor.TO)}>
+					{Object.keys(currencies).map(code => <option key={code} value={code}>{code} - {currencies[code]}</option>)}
 				</Dropdown>
-				<Result>{to2(converted)}</Result>
 			</Wrapper>
 		);
 	}

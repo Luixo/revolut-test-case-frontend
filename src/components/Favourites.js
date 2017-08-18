@@ -82,17 +82,24 @@ class Favourites extends Component {
 									const usdObject = rates.find(({ code }) => code === 'USD');
 									converted = usdObject.data[to] / usdObject.data[from];
 								} else {
-									converted = '0';
+									converted = null;
 								}
-								const cut = to2(converted, { needZeros: true });
-								const rate = [cut, converted.toString().slice(cut.length, cut.length + 2)];
+
+								let rateElement = <Rate>Rate unavailable</Rate>;
+								let currencyElement = null;
+								if (converted) {
+									const cut = to2(converted, { needZeros: true });
+									const rate = [cut, converted.toString().slice(cut.length, cut.length + 2)];
+									rateElement = [<Rate>{rate[0]}</Rate>, <Rate small>{rate[1]}</Rate>];
+									currencyElement = <CurrencyName>{currenciesNames[to]}</CurrencyName>;
+								}
 
 								return (
 									<Favourite key={`${from}>${to}`} index={index}>
 										<Title>1 {from}</Title>
 										<Description>
-											<Rate>{rate[0]}</Rate><Rate small>{rate[1]}</Rate>
-											<CurrencyName>{currenciesNames[to]}</CurrencyName>
+											{rateElement}
+											{currencyElement}
 										</Description>
 									</Favourite>
 								)

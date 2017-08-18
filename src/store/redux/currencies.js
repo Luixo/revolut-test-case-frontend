@@ -20,10 +20,14 @@ export const actions = {
 };
 
 const handlers = {
-	[REFRESH]: (state, { data }) => data,
+	[REFRESH]: (_, { data }) => data,
 };
 
-const initialState = {};
+const initialState = {
+	'GBP': 'British Pound Sterling',
+	'EUR': 'Euro',
+	'USD': 'United States Dollar',
+};
 export const reducer = (state = initialState, action) => {
 	const { type } = action;
 	if (!handlers[type])

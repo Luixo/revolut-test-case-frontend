@@ -6,10 +6,12 @@ const cutLastZero = input => {
 	return input;
 };
 
-export const to2 = (input, {
+export const to2 = (input = 0, {
 	needZeros = false,
 	keepDot = false,
 } = {}) => {
+	if (input === null)
+		input = 0;
 	input = input.toString();
 	let value = parseFloat(input).toFixed(2);
 	if (!needZeros)

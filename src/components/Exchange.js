@@ -42,25 +42,19 @@ class Exchange extends Component {
 
 		const hintGenerator = ({ to }) => {
 			// $1 = £0.81
-			try {
-				const selectedRateTo = rates.find(({ code }) => to === code);
-				const symbolTo = currencies.find(({ code }) => to === code).symbol;
-				const symbolFrom = currencies.find(({ code }) => from === code).symbol;
-				return `${symbolTo}1 = ${symbolFrom}${to2(selectedRateTo.data[from])}`;
-			} catch(e) {
-				return '';
-			}
+			let result = '';
+			const selectedRateTo = rates.find(({ code }) => to === code);
+			const symbolTo = currencies.find(({ code }) => to === code).symbol;
+			const symbolFrom = currencies.find(({ code }) => from === code).symbol;
+			if (selectedRateTo.data[from])
+				result = `${symbolTo}1 = ${symbolFrom}${to2(selectedRateTo.data[from])}`;
+			return result;
 		};
 
-		let currentConverted;
-		try {
-			const currentRateTo = rates.find(({ code }) => to === code);
-			currentConverted = currentAmount / currentRateTo.data[from];
-			if (!currentAmount || !currentConverted)
-				throw new Error();
-		} catch(e) {
-			currentConverted = ''
-		}
+		let currentConverted = '';
+		const currentRateTo = rates.find(({ code }) => to === code);
+		if (currentAmount && currentRateTo.data[from])
+			currentConverted = to2(currentAmount / currentRateTo.data[from]);
 
 		return (
 			<Wrapper>

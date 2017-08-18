@@ -30,6 +30,7 @@ const FavouritesButton = glamorous(Button)({
 	border: '1px solid white',
 	background: 'rgba(0,0,0,0.2)',
 	borderRadius: 5,
+	justifyContent: 'space-around',
 	':after': {
 		content: '"▼"'
 	}
@@ -79,15 +80,12 @@ class Navigation extends Component {
 		else if (pathname.startsWith('/')) {
 			const exit = onExit;
 			const toFavourites = () => push('./favourites');
-			let rateHint;
-			try {
-				const selectedRateFrom = rates.find(({ code }) => from === code);
-				const symbolTo = currencies.find(({ code }) => to === code).symbol;
-				const symbolFrom = currencies.find(({ code }) => from === code).symbol;
+			let rateHint = 'Rate unavailable';
+			const selectedRateFrom = rates.find(({ code }) => from === code);
+			const symbolFrom = currencies.find(({ code }) => from === code).symbol;
+			const symbolTo = currencies.find(({ code }) => to === code).symbol;
+			if (selectedRateFrom.data[to])
 				rateHint = `${symbolFrom}1 = ${symbolTo}${to2(selectedRateFrom.data[to])}`;
-			} catch(e) {
-				rateHint = 'Unavailable';
-			}
 
 			backElement = <Button onClick={() => {
 				exit();
@@ -128,6 +126,8 @@ Navigation = connect(({ view: { exchange, favourites }, user: { cash }, rates })
 		nextTo =  floor2(prevTo + floor2(amount / rates.find(({code}) => to === code).data[from]));
 		canExchange = true;
 	}
+	if (!nextTo)
+		canExchange = false;
 	return {
 		exchangeFrom: { code: from, amount: nextFrom, },
 		exchangeTo: { code: to, amount: nextTo, },

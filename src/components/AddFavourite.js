@@ -71,9 +71,9 @@ class AddFavourite extends Component {
 						const filtered = Object.keys(currencies).filter(code => {
 							// TODO: improve performance
 							const name = currencies[code];
-							if (code.includes(value) || name.includes(value))
+							if (code.toLowerCase().includes(value.toLowerCase()) || name.toLowerCase().includes(value.toLowerCase()))
 								return true;
-							if (misMatches.some(reg => reg.test(code) || reg.test(name)))
+							if (value.length > 1 && (misMatches.some(reg => reg.test(code) || reg.test(name))))
 								return true;
 							return false;
 						}).reduce((memo, code) => {
